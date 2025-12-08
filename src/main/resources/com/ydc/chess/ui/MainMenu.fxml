@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="600.0" prefWidth="900.0"
+            style="-fx-background-color: #F0F0F0;"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.ydc.chess.controller.MainMenuController">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: #CCCCCC;">
+            <padding>
+                <Insets top="10.0" right="20.0" bottom="10.0" left="20.0" />
+            </padding>
+            <Label text="中国象棋小游戏" style="-fx-font-weight: bold;">
+                <font>
+                    <Font size="24.0" />
+                </font>
+            </Label>
+
+            <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" spacing="15.0">
+                <Button fx:id="settingsButton" text="⚙️ 设置" onAction="#onSettingsClicked" />
+                <Button fx:id="recordsButton" text="📜 对局记录" onAction="#onRecordsClicked" />
+            </HBox>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox alignment="CENTER" spacing="30.0">
+            <Label text="主菜单" >
+                <font>
+                    <Font size="36.0" />
+                </font>
+                <VBox.margin>
+                    <Insets bottom="30.0" />
+                </VBox.margin>
+            </Label>
+
+            <Button fx:id="localPlayButton" text="开始本地对局"
+                    onAction="#onLocalPlayClicked"
+                    prefWidth="200.0" prefHeight="50.0"
+                    style="-fx-font-size: 18px; -fx-background-color: #4CAF50; -fx-text-fill: white;" />
+
+            <Button fx:id="networkPlayButton" text="网络 P2P 对战"
+                    onAction="#onNetworkPlayClicked"
+                    prefWidth="200.0" prefHeight="50.0"
+                    style="-fx-font-size: 18px; -fx-background-color: #2196F3; -fx-text-fill: white;" />
+
+            <Button fx:id="exitButton" text="退出游戏"
+                    onAction="#onExitClicked"
+                    prefWidth="200.0" prefHeight="50.0"
+                    style="-fx-font-size: 18px; -fx-background-color: #F44336; -fx-text-fill: white;" />
+        </VBox>
+    </center>
+
+    <bottom>
+        <Label text="© 2025 中国象棋小游戏" BorderPane.alignment="CENTER" />
+    </bottom>
+</BorderPane>

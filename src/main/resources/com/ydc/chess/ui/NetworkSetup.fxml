@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<!-- 网络对战设置界面 -->
+<BorderPane prefHeight="600.0" prefWidth="900.0"
+            style="-fx-background-color: #F0F0F0;"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.ydc.chess.controller.NetworkSetupController">
+
+    <top>
+        <Label text="网络对战大厅" BorderPane.alignment="CENTER">
+            <font><Font size="28.0" /></font>
+            <padding><Insets top="20.0" bottom="20.0"/></padding>
+        </Label>
+    </top>
+
+    <center>
+        <HBox spacing="40.0" alignment="CENTER">
+            <!-- 左侧：我是主机 -->
+            <VBox alignment="TOP_CENTER" spacing="20.0" style="-fx-background-color: white; -fx-background-radius: 10;" maxWidth="350" minWidth="350" prefHeight="400">
+                <padding><Insets top="30" right="20" bottom="30" left="20"/></padding>
+                <Label text="我是主机 (创建游戏)" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+                <Label text="点击下方按钮创建房间，&#10;等待同一WiFi下的朋友加入。" textAlignment="CENTER" wrapText="true" style="-fx-text-fill: #666;"/>
+
+                <Button fx:id="createHostButton" text="创建并等待连接" onAction="#onCreateHostClicked"
+                        style="-fx-font-size: 16px; -fx-background-color: #2196F3; -fx-text-fill: white; -fx-pref-width: 200; -fx-pref-height: 40;"/>
+
+                <VBox fx:id="hostStatusBox" visible="false" alignment="CENTER" spacing="10">
+                    <ProgressIndicator />
+                    <Label text="正在广播信号，等待连接..." />
+                </VBox>
+            </VBox>
+
+            <!-- 右侧：我是客机 -->
+            <VBox alignment="TOP_CENTER" spacing="20.0" style="-fx-background-color: white; -fx-background-radius: 10;" maxWidth="350" minWidth="350" prefHeight="400">
+                <padding><Insets top="30" right="20" bottom="30" left="20"/></padding>
+                <Label text="我是客机 (加入游戏)" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+                <Label text="正在搜索局域网内的对局..." textAlignment="CENTER" wrapText="true" style="-fx-text-fill: #666;"/>
+
+                <!-- 搜索到的主机列表 -->
+                <ListView fx:id="hostListView" prefHeight="200.0" />
+
+                <Button fx:id="joinGameButton" text="加入选中的对局" onAction="#onJoinGameClicked" disable="true"
+                        style="-fx-font-size: 16px; -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-pref-width: 200; -fx-pref-height: 40;"/>
+            </VBox>
+        </HBox>
+    </center>
+
+    <bottom>
+        <Button text="返回主菜单" onAction="#onBackClicked" BorderPane.alignment="CENTER"
+                style="-fx-font-size: 14px; -fx-background-color: #9E9E9E; -fx-text-fill: white;">
+            <BorderPane.margin><Insets bottom="20.0"/></BorderPane.margin>
+        </Button>
+    </bottom>
+
+</BorderPane>

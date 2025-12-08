@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 请根据您的项目名称和组织ID进行调整 -->
+    <groupId>org.example</groupId>
+    <artifactId>ChineseChessGame</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <!-- ==================================================================== -->
+    <!--                                属性配置 (Properties)                                -->
+    <!-- ==================================================================== -->
+    <properties>
+        <!-- 编译/运行使用的 Java 版本 (您确定是 25) -->
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- JavaFX 模块版本 -->
+        <javafx.version>21.0.1</javafx.version>
+    </properties>
+
+    <!-- ==================================================================== -->
+    <!--                                依赖列表 (Dependencies)                                -->
+    <!-- 必须包含 JavaFX、MySQL 和 Gson 库本身 -->
+    <!-- ==================================================================== -->
+    <dependencies>
+        <!-- 1. JavaFX 核心 UI 模块 -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <!-- 2. JavaFX FXML 模块 (用于加载 MainMenu.fxml) -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
+        <!-- 3. MySQL JDBC 驱动 (用于数据库连接) -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
+        </dependency>
+
+        <!-- 4. GSON (用于网络通信中的对象序列化，将数据转为字符串) -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+
+    </dependencies>
+
+    <!-- ==================================================================== -->
+    <!--                                 构建配置 (Build)                                 -->
+    <!-- 包含运行 JavaFX 所需的插件 -->
+    <!-- ==================================================================== -->
+    <build>
+        <plugins>
+            <!-- 1. 编译插件：确保使用正确的 JDK 版本编译 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+
+            <!-- 2. JavaFX 运行插件：解决“缺少 JavaFX 运行时组件”的关键 -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <!-- 启动类的完整路径，必须精确匹配 -->
+                    <mainClass>com.ydc.chess.MainApplication</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
