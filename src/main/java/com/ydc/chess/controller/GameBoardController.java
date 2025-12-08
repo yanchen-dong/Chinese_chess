@@ -61,11 +61,18 @@ public class GameBoardController {
             // 获取该位置的棋子
             Piece piece = gameBoard.getPiece(clickedPos);
 
-            if (piece != null) {
+            if (piece != null && !piece.ispicked()) {
                 log("选中: " + piece.getName() + " " + clickedPos.toString());
-                // TODO: 这里后续添加“选中状态”的高亮显示逻辑
-            } else {
+                gameBoard.clearpicked();
+                piece.setpicked(true);
+            }
+            else if (piece != null && piece.ispicked()) {
+                log("取消选中: " + piece.getName() + " " + clickedPos.toString());
+                piece.setpicked(false);
+            }
+            else {
                 log("点击空地: " + clickedPos.toString());
+                gameBoard.clearpicked();
                 // TODO: 这里后续添加“移动棋子”的逻辑
             }
         }

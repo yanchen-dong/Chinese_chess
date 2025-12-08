@@ -20,7 +20,10 @@
     <center>
         <!-- 使用 Pane 作为容器，稍后在代码中动态绘制棋盘线和棋子 -->
         <!-- 这里的样式只是为了让你看到区域，实际会覆盖 -->
-        <Pane fx:id="boardPane" prefHeight="650.0" prefWidth="600.0"
+        <Pane fx:id="boardPane"
+              prefHeight="625.0" prefWidth="560.0"
+              minHeight="625.0" minWidth="560.0"
+              maxHeight="625.0" maxWidth="560.0"
               style="-fx-background-color: #E6C288; -fx-border-color: #8B4513; -fx-border-width: 5;">
             <BorderPane.margin>
                 <Insets top="20" bottom="20" left="20" right="20"/>

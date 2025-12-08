@@ -14,8 +14,8 @@
     <!-- ==================================================================== -->
     <properties>
         <!-- 编译/运行使用的 Java 版本 (您确定是 25) -->
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
+        <maven.compiler.source>24</maven.compiler.source>
+        <maven.compiler.target>24</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- JavaFX 模块版本 -->

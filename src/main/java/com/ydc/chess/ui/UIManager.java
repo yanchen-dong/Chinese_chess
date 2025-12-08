@@ -45,11 +45,12 @@ public class UIManager {
 
             // 3. 创建新场景或替换根节点
             // 这里我们直接替换 Scene 的根节点，或者创建一个新 Scene
-            Scene scene = new Scene(root, 900, 600); // 默认大小，可调整
+            Scene scene = new Scene(root, 850, 675); // 默认大小，可调整
 
             // 4. 设置到主窗口
             primaryStage.setScene(scene);
             primaryStage.setTitle("中国象棋 - " + title);
+            primaryStage.setResizable(false);
             primaryStage.show();
 
         } catch (IOException e) {

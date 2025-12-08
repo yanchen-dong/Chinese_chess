@@ -10,6 +10,14 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.animation.ScaleTransition;
+import javafx.animation.Timeline;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.ParallelTransition;
+import javafx.animation.PauseTransition;
+import javafx.util.Duration;
+import javafx.scene.effect.DropShadow;
 
 /**
  * 负责在界面上绘制中国象棋的棋盘线条和棋子。
@@ -131,6 +139,46 @@ public class BoardRenderer {
         circle.setUserData(piece);
         label.setUserData(piece);
         label.setMouseTransparent(true);
+
+        // 添加标识，方便查找
+        circle.setId("piece_circle_" + pos.getX() + "_" + pos.getY());
+        label.setId("piece_label_" + pos.getX() + "_" + pos.getY());
+
+        // 添加监听器
+        piece.ispickedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                // 选中状态：放大
+                ScaleTransition circleTransition = new ScaleTransition(Duration.millis(200), circle);
+                circleTransition.setToX(1.2);
+                circleTransition.setToY(1.2);
+                circleTransition.play();
+
+                ScaleTransition labelTransition = new ScaleTransition(Duration.millis(200), label);
+                labelTransition.setToX(1.2);
+                labelTransition.setToY(1.2);
+                labelTransition.play();
+
+                circle.setStroke(Color.GOLD);
+                circle.setStrokeWidth(3.0);
+
+                circle.toFront();
+                label.toFront();
+            } else {
+                // 取消选中：恢复
+                ScaleTransition circleTransition = new ScaleTransition(Duration.millis(200), circle);
+                circleTransition.setToX(1.0);
+                circleTransition.setToY(1.0);
+                circleTransition.play();
+
+                ScaleTransition labelTransition = new ScaleTransition(Duration.millis(200), label);
+                labelTransition.setToX(1.0);
+                labelTransition.setToY(1.0);
+                labelTransition.play();
+
+                circle.setStroke(Color.BLACK);
+                circle.setStrokeWidth(2.0);
+            }
+        });
 
         pane.getChildren().addAll(circle, label);
     }

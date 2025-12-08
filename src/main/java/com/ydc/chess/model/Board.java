@@ -32,37 +32,37 @@ public class Board {
         // 辅助方法：创建并放置棋子
         this.placePiece(new Chariot("車", Piece.Color.BLACK, new Pos(0, 0)));
         this.placePiece(new Chariot("車", Piece.Color.BLACK, new Pos(8, 0)));
-        this.placePiece(new Piece("马", Piece.Color.BLACK, new Pos(1, 0)));
-        this.placePiece(new Piece("马", Piece.Color.BLACK, new Pos(7, 0)));
-        this.placePiece(new Piece("象", Piece.Color.BLACK, new Pos(2, 0)));
-        this.placePiece(new Piece("象", Piece.Color.BLACK, new Pos(6, 0)));
-        this.placePiece(new Piece("士", Piece.Color.BLACK, new Pos(3, 0)));
-        this.placePiece(new Piece("士", Piece.Color.BLACK, new Pos(5, 0)));
+        this.placePiece(new Knight("马", Piece.Color.BLACK, new Pos(1, 0)));
+        this.placePiece(new Knight("马", Piece.Color.BLACK, new Pos(7, 0)));
+        this.placePiece(new Bishop("象", Piece.Color.BLACK, new Pos(2, 0)));
+        this.placePiece(new Bishop("象", Piece.Color.BLACK, new Pos(6, 0)));
+        this.placePiece(new Guard("士", Piece.Color.BLACK, new Pos(3, 0)));
+        this.placePiece(new Guard("士", Piece.Color.BLACK, new Pos(5, 0)));
         this.placePiece(new General("将", Piece.Color.BLACK, new Pos(4, 0)));
 
         this.placePiece(new Cannon("炮", Piece.Color.BLACK, new Pos(1, 2)));
         this.placePiece(new Cannon("炮", Piece.Color.BLACK, new Pos(7, 2)));
 
         for (int c = 0; c < 9; c += 2) {
-            this.placePiece(new Piece("卒", Piece.Color.BLACK, new Pos(c, 3)));
+            this.placePiece(new Soldier("卒", Piece.Color.BLACK, new Pos(c, 3)));
         }
 
         // 放置红方 (底部)
         this.placePiece(new Chariot("俥", Piece.Color.RED, new Pos(0, 9)));
         this.placePiece(new Chariot("俥", Piece.Color.RED, new Pos(8, 9)));
-        this.placePiece(new Piece("傌", Piece.Color.RED, new Pos(1, 9)));
-        this.placePiece(new Piece("傌", Piece.Color.RED, new Pos(7, 9)));
-        this.placePiece(new Piece("相", Piece.Color.RED, new Pos(2, 9)));
-        this.placePiece(new Piece("相", Piece.Color.RED, new Pos(6, 9)));
-        this.placePiece(new Piece("仕", Piece.Color.RED, new Pos(3, 9)));
-        this.placePiece(new Piece("仕", Piece.Color.RED, new Pos(5, 9)));
+        this.placePiece(new Knight("傌", Piece.Color.RED, new Pos(1, 9)));
+        this.placePiece(new Knight("傌", Piece.Color.RED, new Pos(7, 9)));
+        this.placePiece(new Bishop("相", Piece.Color.RED, new Pos(2, 9)));
+        this.placePiece(new Bishop("相", Piece.Color.RED, new Pos(6, 9)));
+        this.placePiece(new Guard("仕", Piece.Color.RED, new Pos(3, 9)));
+        this.placePiece(new Guard("仕", Piece.Color.RED, new Pos(5, 9)));
         this.placePiece(new General("帅", Piece.Color.RED, new Pos(4, 9)));
 
         this.placePiece(new Cannon("炮", Piece.Color.RED, new Pos(1, 7)));
         this.placePiece(new Cannon("炮", Piece.Color.RED, new Pos(7, 7)));
 
         for (int c = 0; c < 9; c += 2) {
-            this.placePiece(new Piece("兵", Piece.Color.RED, new Pos(c, 6)));
+            this.placePiece(new Soldier("兵", Piece.Color.RED, new Pos(c, 6)));
         }
 
         moveHistory.clear();
@@ -88,6 +88,15 @@ public class Board {
             return null;
         }
         return grid[pos.getY()][pos.getX()];
+    }
+
+    public void clearpicked(){
+        for (int c = 0; c < 10; c++) {
+            for (int r = 0; r < 9; r++) {
+                if (grid[c][r]!=null)
+                    grid[c][r].setpicked(false);
+            }
+        }
     }
 
     /**
