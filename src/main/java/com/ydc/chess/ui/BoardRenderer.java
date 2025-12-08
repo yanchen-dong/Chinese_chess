@@ -31,6 +31,12 @@ public class BoardRenderer {
     public static final double MARGIN = 40.0;
     public static final double PIECE_RADIUS = CELL_SIZE / 2 - 5;
 
+    // 保存所有位置的小圆，便于后续控制显示/隐藏
+    private static Circle[][] positionDots = new Circle[COLS][ROWS];
+
+    // 小圆的大小
+    private static final double POSITION_DOT_RADIUS = 5.0;
+
     /**
      * 在指定的面板上绘制棋盘和棋子
      */
@@ -40,6 +46,7 @@ public class BoardRenderer {
         if (board != null) {
             drawPieces(boardPane, board);
         }
+        drawPositionDots(boardPane);
     }
 
     // 绘制网格线、楚河汉界和九宫格
@@ -99,6 +106,56 @@ public class BoardRenderer {
         pane.getChildren().addAll(chu, han);
     }
 
+    private static void drawPositionDots(Pane boardPane) {
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                double centerX = MARGIN + c * CELL_SIZE;
+                double centerY = MARGIN + r * CELL_SIZE;
+
+                // 创建实心小圆
+                Circle dot = new Circle(centerX, centerY, POSITION_DOT_RADIUS);
+                dot.setFill(Color.BLACK);
+                dot.setVisible(false); // 默认不可见
+                dot.setId("pos_dot_" + c + "_" + r); // 设置唯一标识
+
+                // 保存到数组中
+                positionDots[c][r] = dot;
+                boardPane.getChildren().add(dot);
+            }
+        }
+    }
+
+    /**
+     * 显示特定位置的小圆
+     */
+    public static void showPositionDot(int x, int y) {
+        if (x >= 0 && x < COLS && y >= 0 && y < ROWS && positionDots[x][y] != null) {
+            positionDots[x][y].setVisible(true);
+        }
+    }
+
+    /**
+     * 隐藏特定位置的小圆
+     */
+    public static void hidePositionDot(int x, int y) {
+        if (x >= 0 && x < COLS && y >= 0 && y < ROWS && positionDots[x][y] != null) {
+            positionDots[x][y].setVisible(false);
+        }
+    }
+
+    /**
+     * 隐藏所有位置的小圆
+     */
+    public static void hideAllPositionDots() {
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                if (positionDots[c][r] != null) {
+                    positionDots[c][r].setVisible(false);
+                }
+            }
+        }
+    }
+
     private static void drawPieces(Pane boardPane, Board board) {
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
@@ -140,11 +197,11 @@ public class BoardRenderer {
         label.setUserData(piece);
         label.setMouseTransparent(true);
 
-        // 添加标识，方便查找
+        // 5. 添加标识，方便查找
         circle.setId("piece_circle_" + pos.getX() + "_" + pos.getY());
         label.setId("piece_label_" + pos.getX() + "_" + pos.getY());
 
-        // 添加监听器
+        // 6. 添加监听器
         piece.ispickedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 // 选中状态：放大
@@ -163,6 +220,17 @@ public class BoardRenderer {
 
                 circle.toFront();
                 label.toFront();
+
+                // 新增：显示这个棋子可移动位置的小圆
+                // 这里先简单地显示棋子当前位置的小圆作为示例
+                int x = pos.getX();
+                int y = pos.getY();
+                if (x >= 0 && x < COLS && y >= 0 && y < ROWS && positionDots[x][y] != null) {
+                    positionDots[x-1][y-1].setVisible(true);
+                }
+
+                // 你可以在这里添加逻辑，根据棋子的移动规则显示多个位置的小圆
+                // 例如：showMovePositions(piece);
             } else {
                 // 取消选中：恢复
                 ScaleTransition circleTransition = new ScaleTransition(Duration.millis(200), circle);
@@ -177,6 +245,9 @@ public class BoardRenderer {
 
                 circle.setStroke(Color.BLACK);
                 circle.setStrokeWidth(2.0);
+
+                // 新增：隐藏所有小圆
+                hideAllPositionDots();
             }
         });
 
