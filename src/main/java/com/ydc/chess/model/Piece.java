@@ -1,14 +1,13 @@
+// java
 package com.ydc.chess.model;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import jdk.jfr.FlightRecorder;
 
 /**
  * 棋子基类
  */
 public class Piece {
-
 
     public enum Color { RED, BLACK }
     private final String name;
@@ -46,11 +45,30 @@ public class Piece {
 
     public boolean ispicked() { return ispickedProperty().get(); }
 
-    public void setpicked(boolean picked) { ispickedProperty().set(picked);
-        ispicked = picked;}
+    public void setpicked(boolean picked) {
+        ispickedProperty().set(picked);
+        ispicked = picked;
+    }
 
+    /**
+     * 原有移动方法，保留以兼容现有调用
+     */
     public void moveTo(Pos newPos) {
         this.position = newPos;
+    }
+
+    /**
+     * 新增标准 setter，供外部直接设置位置。
+     */
+    public void setPosition(Pos pos) {
+        this.position = pos;
+    }
+
+    /**
+     * 便捷的 int 参数版本
+     */
+    public void setPosition(int x, int y) {
+        moveTo(new Pos(x, y));
     }
 
     public void capture() { /* 模拟被吃 */ }

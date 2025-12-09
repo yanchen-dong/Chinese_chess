@@ -24,7 +24,7 @@ public class GameBoardController {
     @FXML private TextArea gameLogArea; // 显示日志
 
     private Board gameBoard; // 游戏核心数据模型
-
+    private Piece selectedPiece=null;
     // 初始化方法，JavaFX 自动调用
     @FXML
     public void initialize() {
@@ -49,34 +49,45 @@ public class GameBoardController {
     }
 
     // 处理棋盘点击事件
+
     private void handleBoardClick(MouseEvent event) {
-        // 获取点击的像素坐标
         double mouseX = event.getX();
         double mouseY = event.getY();
-
-        // 转换为逻辑坐标 (列, 行)
         Pos clickedPos = getLogicalPosition(mouseX, mouseY);
 
         if (clickedPos != null) {
-            // 获取该位置的棋子
             Piece piece = gameBoard.getPiece(clickedPos);
 
-            if (piece != null && !piece.ispicked()) {
-                log("选中: " + piece.getName() + " " + clickedPos.toString());
-                gameBoard.clearpicked();
-                piece.setpicked(true);
+            // 情况1：点击了一个棋子
+            if (piece != null) {
+                // 如果点击的是已选中的棋子，取消选中
+                if (piece == selectedPiece) {
+                    piece.setpicked(false);
+                    selectedPiece = null;
+                    log("取消选中: " + piece.getName() + " " + clickedPos.toString());
+                }
+                // 如果点击的是其他棋子，切换选中
+                else if (piece.getColor() == gameBoard.getCurrentTurn()) {
+                    gameBoard.clearpicked();
+                    piece.setpicked(true);
+                    selectedPiece = piece;
+                    log("选中: " + piece.getName() + " " + clickedPos.toString());
+                }
             }
-            else if (piece != null && piece.ispicked()) {
-                log("取消选中: " + piece.getName() + " " + clickedPos.toString());
-                piece.setpicked(false);
-            }
-            else {
-                log("点击空地: " + clickedPos.toString());
-                gameBoard.clearpicked();
-                // TODO: 这里后续添加“移动棋子”的逻辑
+            // 情况2：点击了空地，尝试移动选中的棋子
+            else if (selectedPiece != null) {
+                boolean success = gameBoard.move(selectedPiece.getPosition(), clickedPos);
+                if (success) {
+                    log("移动棋子: " + selectedPiece.getName() + " 从 " + selectedPiece.getPosition().toString() + " 到 " + clickedPos.toString());
+                    selectedPiece = null;
+                    refreshBoard(); // 刷新棋盘显示
+                } else {
+                    log("非法移动");
+                }
             }
         }
     }
+
 
     // 将像素坐标转换为逻辑坐标 (反向计算)
     private Pos getLogicalPosition(double x, double y) {

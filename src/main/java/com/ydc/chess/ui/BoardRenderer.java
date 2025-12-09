@@ -1,8 +1,10 @@
+// java
 package com.ydc.chess.ui;
 
 import com.ydc.chess.model.Board;
 import com.ydc.chess.model.Piece;
 import com.ydc.chess.model.Pos;
+import com.ydc.chess.rule.rule;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color; // 这是 JavaFX 的颜色，用于绘图
@@ -11,11 +13,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.animation.ScaleTransition;
-import javafx.animation.Timeline;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.ParallelTransition;
-import javafx.animation.PauseTransition;
 import javafx.util.Duration;
 import javafx.scene.effect.DropShadow;
 
@@ -118,7 +115,7 @@ public class BoardRenderer {
                 dot.setVisible(false); // 默认不可见
                 dot.setId("pos_dot_" + c + "_" + r); // 设置唯一标识
 
-                // 保存到数组中
+                // 保存到数组中，索引为 [col][row]
                 positionDots[c][r] = dot;
                 boardPane.getChildren().add(dot);
             }
@@ -162,13 +159,13 @@ public class BoardRenderer {
                 Pos pos = new Pos(c, r);
                 Piece piece = board.getPiece(pos);
                 if (piece != null) {
-                    drawSinglePiece(boardPane, piece);
+                    drawSinglePiece(boardPane, board, piece);
                 }
             }
         }
     }
 
-    private static void drawSinglePiece(Pane pane, Piece piece) {
+    private static void drawSinglePiece(Pane pane, Board board, Piece piece) {
         Pos pos = piece.getPosition();
         double centerX = MARGIN + pos.getX() * CELL_SIZE;
         double centerY = MARGIN + pos.getY() * CELL_SIZE;
@@ -221,16 +218,10 @@ public class BoardRenderer {
                 circle.toFront();
                 label.toFront();
 
-                // 新增：显示这个棋子可移动位置的小圆
-                // 这里先简单地显示棋子当前位置的小圆作为示例
-                int x = pos.getX();
-                int y = pos.getY();
-                if (x >= 0 && x < COLS && y >= 0 && y < ROWS && positionDots[x][y] != null) {
-                    positionDots[x-1][y-1].setVisible(true);
-                }
+                // 先隐藏此前的显示，再基于规则显示可走位置
+                hideAllPositionDots();
+                showMovePositions(board, piece);
 
-                // 你可以在这里添加逻辑，根据棋子的移动规则显示多个位置的小圆
-                // 例如：showMovePositions(piece);
             } else {
                 // 取消选中：恢复
                 ScaleTransition circleTransition = new ScaleTransition(Duration.millis(200), circle);
@@ -246,11 +237,39 @@ public class BoardRenderer {
                 circle.setStroke(Color.BLACK);
                 circle.setStrokeWidth(2.0);
 
-                // 新增：隐藏所有小圆
+                // 隐藏所有小圆
                 hideAllPositionDots();
             }
         });
 
         pane.getChildren().addAll(circle, label);
+    }
+
+    /**
+     * 根据基本走法规则显示该棋子可以走到的目标位置小圆（不做“自将”全局判定）
+     * 使用 Board.getGrid() 与 rule.isValidMove 计算。
+     */
+    private static void showMovePositions(Board board, Piece piece) {
+        if (board == null || piece == null) return;
+        Piece[][] grid = board.getGrid();
+        Pos p = piece.getPosition();
+        if (p == null) return;
+        int fr = p.getY(), fc = p.getX();
+
+        for (int tr = 0; tr < ROWS; tr++) {
+            for (int tc = 0; tc < COLS; tc++) {
+                // 跳过自身位置
+                if (tr == fr && tc == fc) continue;
+                // 目标为同色棋子也跳过（不可吃同色）
+                Piece dest = grid[tr][tc];
+                if (dest != null && dest.getColor() == piece.getColor()) continue;
+                // 基本规则校验（rule.isValidMove 接受 board, fromRow, fromCol, toRow, toCol）
+                boolean ok = rule.isValidMove(grid, fr, fc, tr, tc);
+                if (ok) {
+                    // 显示该位置的小圆（注意 showPositionDot 参数为 x=col, y=row）
+                    showPositionDot(tc, tr);
+                }
+            }
+        }
     }
 }

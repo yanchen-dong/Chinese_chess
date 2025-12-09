@@ -1,5 +1,7 @@
+
 package com.ydc.chess.model;
 
+import com.ydc.chess.rule.rule;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,28 +10,29 @@ import java.util.List;
  */
 public class Board {
 
-    // grid[10][9]: Piece|null - 存储棋子引用，10行9列
+    // grid[10][9]: grid[row][col]
     private Piece[][] grid = new Piece[10][9];
     // moveHistory: List<Move> - 存储走棋历史
     private List<Move> moveHistory = new ArrayList<>();
+    // 当前执子方（红先）
+    private Piece.Color currentTurn = Piece.Color.RED;
+
     public Board() {
         initialize();
     }
 
     /**
-     * initialize() - 初始化棋盘，将所有 32 颗棋子摆放在起始位置
+     * 初始化棋盘，将棋子摆回起始位置
      */
     public void initialize() {
-        // 1. 清空棋盘
+        // 清空棋盘
         for (int r = 0; r < 10; r++) {
             for (int c = 0; c < 9; c++) {
                 grid[r][c] = null;
             }
         }
 
-        // 2. 放置棋子 (使用独立的棋子类)
-
-        // 辅助方法：创建并放置棋子
+        // 放置黑方（上方，行较小）
         this.placePiece(new Chariot("車", Piece.Color.BLACK, new Pos(0, 0)));
         this.placePiece(new Chariot("車", Piece.Color.BLACK, new Pos(8, 0)));
         this.placePiece(new Knight("马", Piece.Color.BLACK, new Pos(1, 0)));
@@ -47,7 +50,7 @@ public class Board {
             this.placePiece(new Soldier("卒", Piece.Color.BLACK, new Pos(c, 3)));
         }
 
-        // 放置红方 (底部)
+        // 放置红方（下方，行较大）
         this.placePiece(new Chariot("俥", Piece.Color.RED, new Pos(0, 9)));
         this.placePiece(new Chariot("俥", Piece.Color.RED, new Pos(8, 9)));
         this.placePiece(new Knight("傌", Piece.Color.RED, new Pos(1, 9)));
@@ -66,50 +69,166 @@ public class Board {
         }
 
         moveHistory.clear();
+        currentTurn = Piece.Color.RED;
         System.out.println("棋盘已初始化。");
     }
 
-    // 辅助方法：放置棋子到棋盘
+    // 放置棋子到棋盘（Pos: x=列, y=行）
     private void placePiece(Piece piece) {
         Pos pos = piece.getPosition();
+        if (pos == null) return;
         if (pos.getX() >= 0 && pos.getX() <= 8 && pos.getY() >= 0 && pos.getY() <= 9) {
             grid[pos.getY()][pos.getX()] = piece;
         }
     }
 
-
-    /**
-     * getPiece(pos) - 获取指定位置的棋子
-     * @param pos 坐标对象
-     * @return 位于该位置的棋子，如果没有则为 null
-     */
     public Piece getPiece(Pos pos) {
+        if (pos == null) return null;
         if (pos.getX() < 0 || pos.getX() > 8 || pos.getY() < 0 || pos.getY() > 9) {
             return null;
         }
         return grid[pos.getY()][pos.getX()];
     }
 
+    public Piece[][] getGrid() {
+        return grid;
+    }
+
+    public Piece.Color getCurrentTurn() {
+        return currentTurn;
+    }
+
     public void clearpicked(){
-        for (int c = 0; c < 10; c++) {
-            for (int r = 0; r < 9; r++) {
-                if (grid[c][r]!=null)
-                    grid[c][r].setpicked(false);
+        for (int r = 0; r < 10; r++) {
+            for (int c = 0; c < 9; c++) {
+                if (grid[r][c] != null) {
+                    grid[r][c].setpicked(false);
+                }
             }
         }
     }
 
-    /**
-     * setPiece(pos, piece) - 设置指定位置的棋子
-     * (保留了之前的 setPiece/applyMove/undoMove 骨架，未完整实现)
-     */
     public void setPiece(Pos pos, Piece piece) {
+        if (pos == null) return;
         if (pos.getX() >= 0 && pos.getX() <= 8 && pos.getY() >= 0 && pos.getY() <= 9) {
             grid[pos.getY()][pos.getX()] = piece;
         }
     }
-    // ... 其他方法保持不变 (省略以节省空间，假设您已经有 Pos 和 Move 类)
 
-    // 省略 applyMove, undoMove, getMoveHistory
-    // ...
+    private boolean inBounds(int r, int c) {
+        return r >= 0 && r <= 9 && c >= 0 && c <= 8;
+    }
+
+    /**
+     * 使用坐标移动（行,列）
+     * fr: 起始行, fc: 起始列, tr: 目标行, tc: 目标列
+     */
+    public boolean move(int fr, int fc, int tr, int tc) {
+        if (!inBounds(fr, fc) || !inBounds(tr, tc)) return false;
+        Piece from = grid[fr][fc];
+        if (from == null) return false;
+        if (from.getColor() != currentTurn) return false;
+        Piece to = grid[tr][tc];
+        if (to != null && to.getColor() == from.getColor()) return false;
+
+        // 基本走法校验
+        if (!rule.isValidMove(grid, fr, fc, tr, tc)) return false;
+
+        // 模拟走子
+        Piece captured = grid[tr][tc];
+        grid[tr][tc] = from;
+        grid[fr][fc] = null;
+
+        // 检查自将（走后本方是否被将军）
+        if (isInCheck(currentTurn)) {
+            // 恢复
+            grid[fr][fc] = from;
+            grid[tr][tc] = captured;
+            return false;
+        }
+
+        // 更新棋子对象位置（Pos: x=列, y=行）
+        from.setPosition(new Pos(tc, tr));//添加setPosition方法
+
+        // 若被吃子对象存在，可视需要将其 position 清空或保持旧值（此处保留旧值以便历史回退）
+        // 记录历史（Pos 构造为 x=列, y=行）
+        moveHistory.add(new Move(new Pos(fc, fr), new Pos(tc, tr), captured));
+        // 取消所有已选中状态，便于 UI 更新
+        clearpicked();
+        // 切换回合
+        currentTurn = (currentTurn == Piece.Color.RED) ? Piece.Color.BLACK : Piece.Color.RED;
+        return true;
+    }
+
+    public boolean move(Pos from, Pos to) {
+        if (from == null || to == null) return false;
+        return move(from.getY(), from.getX(), to.getY(), to.getX());
+    }
+
+    private Pos findGeneralPos(Piece.Color color) {
+        for (int r = 0; r < 10; r++) {
+            for (int c = 0; c < 9; c++) {
+                Piece p = grid[r][c];
+                if (p instanceof General && p.getColor() == color) {
+                    return new Pos(c, r);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 判断 color 方是否被将（任一敌方棋子按基本走法可吃将）
+     */
+    private boolean isInCheck(Piece.Color color) {
+        Pos gpos = findGeneralPos(color);
+        if (gpos == null) {
+            // 没有将视为被将（或异常），禁止该走法
+            return true;
+        }
+        int gr = gpos.getY(), gc = gpos.getX();
+        for (int r = 0; r < 10; r++) {
+            for (int c = 0; c < 9; c++) {
+                Piece p = grid[r][c];
+                if (p != null && p.getColor() != color) {
+                    if (rule.isValidMove(grid, r, c, gr, gc)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean undo() {
+        if (moveHistory.isEmpty()) return false;
+        Move last = moveHistory.remove(moveHistory.size() - 1);
+        Pos from = last.getFromPos();
+        Pos to = last.getToPos();
+        Piece captured = last.getCapturedPiece();
+
+        // 将移动回去（注意 Pos 为 x=列,y=行）
+        Piece moved = grid[to.getY()][to.getX()];
+        grid[from.getY()][from.getX()] = moved;
+        grid[to.getY()][to.getX()] = captured;
+
+        // 同步棋子对象的位置
+        if (moved != null) {
+            moved.setPosition(new Pos(from.getX(), from.getY()));
+        }
+        if (captured != null) {
+            // 被吃的棋子复位到被吃位置（以便 UI/逻辑一致）
+            captured.setPosition(new Pos(to.getX(), to.getY()));
+        }
+
+        // 取消所有已选中状态，便于 UI 更新
+        clearpicked();
+        // 切换回合
+        currentTurn = (currentTurn == Piece.Color.RED) ? Piece.Color.BLACK : Piece.Color.RED;
+        return true;
+    }
+
+    public List<Move> getMoveHistory() {
+        return moveHistory;
+    }
 }
