@@ -10,6 +10,12 @@ import java.util.List;
  */
 public class Board {
 
+    public enum checkStatus {
+        NONE,
+        BEFORE_CHECK,
+        AFTER_CHECK
+    }//被将军的状态
+    private checkStatus checkstatus;
     // grid[10][9]: grid[row][col]
     private Piece[][] grid = new Piece[10][9];
     // moveHistory: List<Move> - 存储走棋历史
@@ -69,6 +75,7 @@ public class Board {
         }
 
         moveHistory.clear();
+        checkstatus = checkStatus.NONE;
         currentTurn = Piece.Color.RED;
         System.out.println("棋盘已初始化。");
     }
@@ -98,6 +105,8 @@ public class Board {
         return currentTurn;
     }
 
+    public checkStatus getCheckStatus() { return checkstatus; }
+
     public void clearpicked(){
         for (int r = 0; r < 10; r++) {
             for (int c = 0; c < 9; c++) {
@@ -124,12 +133,16 @@ public class Board {
      * fr: 起始行, fc: 起始列, tr: 目标行, tc: 目标列
      */
     public boolean move(int fr, int fc, int tr, int tc) {
+        checkstatus = checkStatus.NONE;
         if (!inBounds(fr, fc) || !inBounds(tr, tc)) return false;
         Piece from = grid[fr][fc];
         if (from == null) return false;
         if (from.getColor() != currentTurn) return false;
         Piece to = grid[tr][tc];
         if (to != null && to.getColor() == from.getColor()) return false;
+        if (isInCheck(currentTurn)) {
+            checkstatus = checkStatus.BEFORE_CHECK;
+        }
 
         // 基本走法校验
         if (!RuleFactory.of(from).isValidMove(grid,fr,fc,tr,tc)) return false;
@@ -144,6 +157,8 @@ public class Board {
             // 恢复
             grid[fr][fc] = from;
             grid[tr][tc] = captured;
+            if (checkstatus != checkStatus.BEFORE_CHECK)
+              checkstatus = checkStatus.AFTER_CHECK;
             return false;
         }
 

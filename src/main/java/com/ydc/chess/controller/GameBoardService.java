@@ -9,11 +9,13 @@ public class GameBoardService {
 
     private final Board board;
     private final GameBoardView view;
+    private final TimerService timerService;
     private Piece selectedPiece = null;
 
-    public GameBoardService(Board board, GameBoardView view) {
+    public GameBoardService(Board board, TimerService timerService , GameBoardView view) {
         this.board = board;
         this.view = view;
+        this.timerService = timerService;
     }
 
     // 初始化：刷新视图并写初始日志/回合
@@ -21,11 +23,21 @@ public class GameBoardService {
         view.refresh(board);
         view.updateTurnLabel("当前回合: 红方");
         view.appendLog("对局开始，红方先行。");
+        view.startTimer();
     }
 
     // 外部可以调用强制刷新
     public void refreshBoard() {
         view.refresh(board);
+    }
+
+    //每回合结束时更改标签
+    public void ChangeLabel() {
+        if (board.getCurrentTurn() == Piece.Color.RED) {
+            view.updateTurnLabel("当前回合: 红方");
+        } else {
+            view.updateTurnLabel("当前回合: 黑方");
+        }
     }
 
     // 处理点击（由控制器将鼠标坐标传入）
@@ -45,6 +57,25 @@ public class GameBoardService {
                 piece.setpicked(true);
                 selectedPiece = piece;
                 view.appendLog("选中: " + piece.getName() + " " + clickedPos);
+            } else if (selectedPiece != null) {//吃子逻辑,&& selectedPiece.getColor() == board.getCurrentTurn()
+                String fromStr = selectedPiece.getPosition() != null ? selectedPiece.getPosition().toString() : "unknown";
+                String toStr = clickedPos.toString();
+
+                boolean success = board.move(selectedPiece.getPosition(), clickedPos);
+                if (success) {
+                    view.appendLog("移动棋子: " + selectedPiece.getName() + " 从 " + fromStr + " 到 " + toStr + " 并吃掉 " + piece.getName());
+                    selectedPiece = null;
+                    view.refresh(board);
+                    ChangeLabel();
+                    timerService.startNewTimer();
+                } else {
+                    if (board.getCheckStatus() == Board.checkStatus.BEFORE_CHECK) {
+                        view.appendLog("你已被将军！");
+                    } else if (board.getCheckStatus() == Board.checkStatus.AFTER_CHECK) {
+                        view.appendLog("这一步之后你将被将军！");
+                    } else
+                    view.appendLog("非法移动");
+                }
             }
         } else if (selectedPiece != null) {
             String fromStr = selectedPiece.getPosition() != null ? selectedPiece.getPosition().toString() : "unknown";
@@ -55,9 +86,16 @@ public class GameBoardService {
                 view.appendLog("移动棋子: " + selectedPiece.getName() + " 从 " + fromStr + " 到 " + toStr);
                 selectedPiece = null;
                 view.refresh(board);
+                ChangeLabel();
+                timerService.startNewTimer();
             } else {
-                view.appendLog("非法移动");
-            }
+                if (board.getCheckStatus() == Board.checkStatus.BEFORE_CHECK) {
+                    view.appendLog("你已被将军！");
+                } else if (board.getCheckStatus() == Board.checkStatus.AFTER_CHECK) {
+                    view.appendLog("这一步之后你将被将军！");
+                } else
+                    view.appendLog("非法移动");
+            }//移动与吃棋代码有很高重合度，可以用接口优化
         }
     }
 

@@ -19,6 +19,7 @@ public class GameBoardController {
 
     private Board gameBoard;
     private GameBoardService boardService;
+    private TimerService timerService;
 
     @FXML
     public void initialize() {
@@ -27,8 +28,10 @@ public class GameBoardController {
         // 创建棋盘数据
         gameBoard = new Board();
 
+        timerService = new TimerService();
+
         // 创建服务并把 view 实现传入（将 UI 操作委托给控制器中的节点）
-        boardService = new GameBoardService(gameBoard, new GameBoardView() {
+        boardService = new GameBoardService(gameBoard, timerService , new GameBoardView() {
             @Override
             public void refresh(Board board) {
                 BoardRenderer.drawBoard(boardPane, board);
@@ -42,6 +45,20 @@ public class GameBoardController {
             @Override
             public void updateTurnLabel(String text) {
                 turnLabel.setText(text);
+            }
+
+            @Override
+            public void startTimer() {
+                // 将秒数格式化为 00:00
+                timerService.secondsProperty().addListener((obs, oldVal, newVal) -> {
+                    int sec = newVal.intValue();
+                    int min = sec / 60;
+                    int s = sec % 60;
+                    timerLabel.setText(String.format("时间: %02d:%02d", min, s));
+                });
+
+                // 游戏一开始自动启动
+                timerService.startNewTimer();
             }
         });
 

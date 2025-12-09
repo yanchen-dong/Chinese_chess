@@ -79,5 +79,5 @@ public class Piece {
         moveTo(new Pos(x, y));
     }
 
-    public void capture() { /* 模拟被吃 */ }
+    public void capture() { this.position = new Pos(-1,-1);}
 }

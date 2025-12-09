@@ -11,4 +11,6 @@ public interface GameBoardView {
 
     // 更新回合标签文本
     void updateTurnLabel(String text);
+
+    void startTimer();
 }
