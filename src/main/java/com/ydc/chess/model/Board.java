@@ -1,7 +1,7 @@
 
 package com.ydc.chess.model;
 
-import com.ydc.chess.rule.rule;
+import com.ydc.chess.rule.RuleFactory;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,7 +132,7 @@ public class Board {
         if (to != null && to.getColor() == from.getColor()) return false;
 
         // 基本走法校验
-        if (!rule.isValidMove(grid, fr, fc, tr, tc)) return false;
+        if (!RuleFactory.of(from).isValidMove(grid,fr,fc,tr,tc)) return false;
 
         // 模拟走子
         Piece captured = grid[tr][tc];
@@ -191,7 +191,7 @@ public class Board {
             for (int c = 0; c < 9; c++) {
                 Piece p = grid[r][c];
                 if (p != null && p.getColor() != color) {
-                    if (rule.isValidMove(grid, r, c, gr, gc)) {
+                    if (RuleFactory.of(p).isValidMove(grid, r, c, gr, gc)) {
                         return true;
                     }
                 }

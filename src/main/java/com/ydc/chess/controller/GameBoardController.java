@@ -1,8 +1,6 @@
 package com.ydc.chess.controller;
 
 import com.ydc.chess.model.Board;
-import com.ydc.chess.model.Piece;
-import com.ydc.chess.model.Pos;
 import com.ydc.chess.ui.BoardRenderer;
 import com.ydc.chess.ui.DialogUtils;
 import com.ydc.chess.ui.UIManager;
@@ -12,133 +10,66 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
-/**
- * 游戏棋盘界面的控制器
- * 负责初始化棋盘、处理点击事件、响应按钮操作。
- */
 public class GameBoardController {
 
-    @FXML private Pane boardPane;       // FXML 中的棋盘容器
-    @FXML private Label turnLabel;      // 显示当前回合
-    @FXML private Label timerLabel;     // 显示时间
-    @FXML private TextArea gameLogArea; // 显示日志
+    @FXML private Pane boardPane;
+    @FXML private Label turnLabel;
+    @FXML private Label timerLabel;
+    @FXML private TextArea gameLogArea;
 
-    private Board gameBoard; // 游戏核心数据模型
-    private Piece selectedPiece=null;
-    // 初始化方法，JavaFX 自动调用
+    private Board gameBoard;
+    private GameBoardService boardService;
+
     @FXML
     public void initialize() {
         System.out.println("初始化棋盘界面...");
 
-        // 1. 创建新的棋盘数据 (会自动初始化 32 个棋子)
+        // 创建棋盘数据
         gameBoard = new Board();
 
-        // 2. 绘制棋盘和棋子
-        refreshBoard();
-
-        // 3. 绑定鼠标点击事件
-        boardPane.setOnMouseClicked(this::handleBoardClick);
-
-        turnLabel.setText("当前回合: 红方");
-        log("对局开始，红方先行。");
-    }
-
-    // 刷新界面的辅助方法
-    private void refreshBoard() {
-        BoardRenderer.drawBoard(boardPane, gameBoard);
-    }
-
-    // 处理棋盘点击事件
-
-    private void handleBoardClick(MouseEvent event) {
-        double mouseX = event.getX();
-        double mouseY = event.getY();
-        Pos clickedPos = getLogicalPosition(mouseX, mouseY);
-
-        if (clickedPos != null) {
-            Piece piece = gameBoard.getPiece(clickedPos);
-
-            // 情况1：点击了一个棋子
-            if (piece != null) {
-                // 如果点击的是已选中的棋子，取消选中
-                if (piece == selectedPiece) {
-                    piece.setpicked(false);
-                    selectedPiece = null;
-                    log("取消选中: " + piece.getName() + " " + clickedPos.toString());
-                }
-                // 如果点击的是其他棋子，切换选中
-                else if (piece.getColor() == gameBoard.getCurrentTurn()) {
-                    gameBoard.clearpicked();
-                    piece.setpicked(true);
-                    selectedPiece = piece;
-                    log("选中: " + piece.getName() + " " + clickedPos.toString());
-                }
+        // 创建服务并把 view 实现传入（将 UI 操作委托给控制器中的节点）
+        boardService = new GameBoardService(gameBoard, new GameBoardView() {
+            @Override
+            public void refresh(Board board) {
+                BoardRenderer.drawBoard(boardPane, board);
             }
-            // 情况2：点击了空地，尝试移动选中的棋子
-            else if (selectedPiece != null) {
-                boolean success = gameBoard.move(selectedPiece.getPosition(), clickedPos);
-                if (success) {
-                    log("移动棋子: " + selectedPiece.getName() + " 从 " + selectedPiece.getPosition().toString() + " 到 " + clickedPos.toString());
-                    selectedPiece = null;
-                    refreshBoard(); // 刷新棋盘显示
-                } else {
-                    log("非法移动");
-                }
+
+            @Override
+            public void appendLog(String msg) {
+                gameLogArea.appendText(msg + "\n");
             }
-        }
+
+            @Override
+            public void updateTurnLabel(String text) {
+                turnLabel.setText(text);
+            }
+        });
+
+        // 初始化服务并绑定鼠标事件
+        boardService.init();
+        boardPane.setOnMouseClicked((MouseEvent e) -> boardService.handleClick(e.getX(), e.getY()));
     }
 
-
-    // 将像素坐标转换为逻辑坐标 (反向计算)
-    private Pos getLogicalPosition(double x, double y) {
-        double margin = BoardRenderer.MARGIN;
-        double cellSize = BoardRenderer.CELL_SIZE;
-
-        // 计算距离网格起点的偏移量
-        double offsetX = x - margin;
-        double offsetY = y - margin;
-
-        // 四舍五入找到最近的交叉点
-        int col = (int) Math.round(offsetX / cellSize);
-        int row = (int) Math.round(offsetY / cellSize);
-
-        // 点击容差范围 (比如点击点必须在交叉点周围 20像素内才算有效)
-        double clickRadius = 20.0;
-        double targetX = margin + col * cellSize;
-        double targetY = margin + row * cellSize;
-
-        if (Math.abs(x - targetX) > clickRadius || Math.abs(y - targetY) > clickRadius) {
-            // 点歪了，不算有效点击
-            return null;
-        }
-
-        // 检查边界
-        if (col >= 0 && col < 9 && row >= 0 && row < 10) {
-            return new Pos(col, row);
-        }
-        return null;
-    }
-
-    // --- 按钮事件 ---
+    // --- 按钮事件（保留在控制器中） ---
 
     @FXML
     public void onRegretClicked() {
         if (DialogUtils.showConfirm("请求悔棋", "您确定要悔棋吗？")) {
-            log("已发送悔棋请求...");
+            gameLogArea.appendText("已发送悔棋请求...\n");
         }
     }
 
     @FXML
     public void onDrawClicked() {
         if (DialogUtils.showConfirm("请求求和", "您确定要提议和局吗？")) {
-            log("已发送求和请求...");
+            gameLogArea.appendText("已发送求和请求...\n");
         }
     }
 
     @FXML
     public void onSurrenderClicked() {
         if (DialogUtils.showConfirm("认输", "确定认输？游戏将结束。")) {
-            log("您认输了。游戏结束。");
+            gameLogArea.appendText("您认输了。游戏结束。\n");
             DialogUtils.showInfo("游戏结束", "您认输了。");
             UIManager.goTo("MainMenu.fxml", "主菜单");
         }
@@ -149,9 +80,5 @@ public class GameBoardController {
         if (DialogUtils.showConfirm("退出", "强制退出将判负，确定吗？")) {
             UIManager.goTo("MainMenu.fxml", "主菜单");
         }
-    }
-
-    private void log(String msg) {
-        gameLogArea.appendText(msg + "\n");
     }
 }

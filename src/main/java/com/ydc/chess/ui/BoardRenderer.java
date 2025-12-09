@@ -4,7 +4,8 @@ package com.ydc.chess.ui;
 import com.ydc.chess.model.Board;
 import com.ydc.chess.model.Piece;
 import com.ydc.chess.model.Pos;
-import com.ydc.chess.rule.rule;
+import com.ydc.chess.rule.RuleFactory;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color; // 这是 JavaFX 的颜色，用于绘图
@@ -15,6 +16,8 @@ import javafx.scene.text.FontWeight;
 import javafx.animation.ScaleTransition;
 import javafx.util.Duration;
 import javafx.scene.effect.DropShadow;
+
+import java.util.Objects;
 
 /**
  * 负责在界面上绘制中国象棋的棋盘线条和棋子。
@@ -198,8 +201,12 @@ public class BoardRenderer {
         circle.setId("piece_circle_" + pos.getX() + "_" + pos.getY());
         label.setId("piece_label_" + pos.getX() + "_" + pos.getY());
 
+        if (piece.getPickListener() != null) {
+            piece.ispickedProperty().removeListener(piece.getPickListener());
+        }
+
         // 6. 添加监听器
-        piece.ispickedProperty().addListener((observable, oldValue, newValue) -> {
+        ChangeListener<Boolean> listener = ((observable, oldValue, newValue) -> {
             if (newValue) {
                 // 选中状态：放大
                 ScaleTransition circleTransition = new ScaleTransition(Duration.millis(200), circle);
@@ -242,14 +249,19 @@ public class BoardRenderer {
             }
         });
 
+        piece.ispickedProperty().addListener(listener);
+        piece.setPickListener(listener);
+
         pane.getChildren().addAll(circle, label);
     }
+
+
 
     /**
      * 根据基本走法规则显示该棋子可以走到的目标位置小圆（不做“自将”全局判定）
      * 使用 Board.getGrid() 与 rule.isValidMove 计算。
      */
-    private static void showMovePositions(Board board, Piece piece) {
+    public static void showMovePositions(Board board, Piece piece) {
         if (board == null || piece == null) return;
         Piece[][] grid = board.getGrid();
         Pos p = piece.getPosition();
@@ -264,7 +276,7 @@ public class BoardRenderer {
                 Piece dest = grid[tr][tc];
                 if (dest != null && dest.getColor() == piece.getColor()) continue;
                 // 基本规则校验（rule.isValidMove 接受 board, fromRow, fromCol, toRow, toCol）
-                boolean ok = rule.isValidMove(grid, fr, fc, tr, tc);
+                boolean ok = RuleFactory.of(piece).isValidMove(grid, fr, fc, tr, tc);
                 if (ok) {
                     // 显示该位置的小圆（注意 showPositionDot 参数为 x=col, y=row）
                     showPositionDot(tc, tr);
