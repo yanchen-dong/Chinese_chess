@@ -8,14 +8,14 @@ import com.ydc.chess.model.Pos;
 public class CheckMate {
 
     public static boolean checkMate(Board board) {
-        Board copy = board.cloneBoard();
+//        Board copy = board.cloneBoard();拷贝棋盘，如果直接改动棋盘的方法出现问题了就用
         // 遍历棋盘上的所有棋子，寻找当前玩家的将军状态
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 10; j++) {
-                Piece piece = copy.getPiece(new Pos(i, j));
+                Piece piece = board.getPiece(new Pos(i, j));
                 if (piece != null && piece.getColor() == board.getCurrentTurn()) {
                     // 检查该棋子是否有合法移动可以解除将军状态
-                    if (canEscapeCheck(copy, piece)) {
+                    if (canEscapeCheck(board, piece)) {
                         return false; // 找到一个合法移动，非将死
                     }
                 }
@@ -37,7 +37,7 @@ public class CheckMate {
                     if (board.move(fromPos, toPos)) {
                         // 撤销模拟移动
                         System.out.println("移动后检查将军状态...");
-                        board.move(toPos, fromPos);
+                        board.undo();
                         if (capturedPiece != null) {
                             board.setPiece(toPos, capturedPiece);
                         }

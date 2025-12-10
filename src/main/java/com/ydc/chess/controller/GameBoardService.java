@@ -72,6 +72,9 @@ public class GameBoardService {
                     if (board.isincheck(board.getCurrentTurn())&&CheckMate.checkMate(board)) {
                         String winner = (board.getCurrentTurn() == Piece.Color.RED) ? "黑方" : "红方";
                         view.appendLog("将死！" + winner + "获胜！");
+                    } else if (!board.isincheck(board.getCurrentTurn())&&CheckMate.checkMate(board)) {
+                        String winner = (board.getCurrentTurn() == Piece.Color.RED) ? "黑方" : "红方";
+                        view.appendLog("困毙！" + winner + "获胜！");
                     }
                 } else {
                     if (board.getCheckStatus() == Board.checkStatus.BEFORE_CHECK) {
@@ -96,6 +99,9 @@ public class GameBoardService {
                 if (board.isincheck(board.getCurrentTurn())&&CheckMate.checkMate(board)) {
                     String winner = (board.getCurrentTurn() == Piece.Color.RED) ? "黑方" : "红方";
                     view.appendLog("将死！" + winner + "获胜！");
+                } else if (!board.isincheck(board.getCurrentTurn())&&CheckMate.checkMate(board)) {
+                    String winner = (board.getCurrentTurn() == Piece.Color.RED) ? "黑方" : "红方";
+                    view.appendLog("困毙！" + winner + "获胜！");
                 }
             } else {
                 if (board.getCheckStatus() == Board.checkStatus.BEFORE_CHECK) {
