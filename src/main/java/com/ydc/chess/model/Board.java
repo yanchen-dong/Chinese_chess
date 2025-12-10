@@ -193,6 +193,36 @@ public class Board {
     }
 
     /**
+     * 克隆棋盘（只深拷贝棋子和棋盘布局，不拷贝历史）
+     */
+    public Board cloneBoard() {
+        Board copy = new Board();
+
+        // 不调用 initialize，重新创建一个空棋盘
+        copy.grid = new Piece[10][9];
+
+        // 深拷贝每一个棋子
+        for (int r = 0; r < 10; r++) {
+            for (int c = 0; c < 9; c++) {
+                Piece p = this.grid[r][c];
+                if (p != null) {
+                    copy.grid[r][c] = Piece.clonePieceSimple(p);
+                }
+            }
+        }
+
+        // 拷贝状态
+        copy.currentTurn = this.currentTurn;
+        copy.checkstatus = this.checkstatus;
+
+        // moveHistory 不拷贝（模拟棋盘无需）
+        copy.moveHistory = new ArrayList<>();
+
+        return copy;
+    }
+
+
+    /**
      * 判断 color 方是否被将（任一敌方棋子按基本走法可吃将）
      */
     private boolean isInCheck(Piece.Color color) {
@@ -213,6 +243,10 @@ public class Board {
             }
         }
         return false;
+    }
+
+    public boolean isincheck(Piece.Color color) {
+        return isInCheck(color);
     }
 
     public boolean undo() {

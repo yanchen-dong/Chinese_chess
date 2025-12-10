@@ -4,6 +4,7 @@ import com.ydc.chess.model.Board;
 import com.ydc.chess.model.Piece;
 import com.ydc.chess.model.Pos;
 import com.ydc.chess.ui.BoardRenderer;
+import com.ydc.chess.rule.CheckMate;
 
 public class GameBoardService {
 
@@ -68,6 +69,10 @@ public class GameBoardService {
                     view.refresh(board);
                     ChangeLabel();
                     timerService.startNewTimer();
+                    if (board.isincheck(board.getCurrentTurn())&&CheckMate.checkMate(board)) {
+                        String winner = (board.getCurrentTurn() == Piece.Color.RED) ? "黑方" : "红方";
+                        view.appendLog("将死！" + winner + "获胜！");
+                    }
                 } else {
                     if (board.getCheckStatus() == Board.checkStatus.BEFORE_CHECK) {
                         view.appendLog("你已被将军！");
@@ -88,6 +93,10 @@ public class GameBoardService {
                 view.refresh(board);
                 ChangeLabel();
                 timerService.startNewTimer();
+                if (board.isincheck(board.getCurrentTurn())&&CheckMate.checkMate(board)) {
+                    String winner = (board.getCurrentTurn() == Piece.Color.RED) ? "黑方" : "红方";
+                    view.appendLog("将死！" + winner + "获胜！");
+                }
             } else {
                 if (board.getCheckStatus() == Board.checkStatus.BEFORE_CHECK) {
                     view.appendLog("你已被将军！");
