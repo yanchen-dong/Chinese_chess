@@ -1,4 +1,4 @@
-package com.ydc.chess.model; // 必须是这个包名
+package com.ydc.chess.model;
 
 /**
  * 代表一次走棋操作的类，用于记录历史和悔棋。

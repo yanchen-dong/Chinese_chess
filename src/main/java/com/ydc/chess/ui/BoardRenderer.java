@@ -200,11 +200,9 @@ public class BoardRenderer {
         // 5. 添加标识，方便查找
         circle.setId("piece_circle_" + pos.getX() + "_" + pos.getY());
         label.setId("piece_label_" + pos.getX() + "_" + pos.getY());
-
         if (piece.getPickListener() != null) {
             piece.ispickedProperty().removeListener(piece.getPickListener());
         }
-
         // 6. 添加监听器
         ChangeListener<Boolean> listener = ((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -254,9 +252,6 @@ public class BoardRenderer {
 
         pane.getChildren().addAll(circle, label);
     }
-
-
-
     /**
      * 根据基本走法规则显示该棋子可以走到的目标位置小圆（不做“自将”全局判定）
      * 使用 Board.getGrid() 与 rule.isValidMove 计算。

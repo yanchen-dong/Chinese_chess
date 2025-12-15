@@ -168,11 +168,26 @@ public class Board {
         // 若被吃子对象存在，可视需要将其 position 清空或保持旧值（此处保留旧值以便历史回退）
         // 记录历史（Pos 构造为 x=列, y=行）
         moveHistory.add(new Move(new Pos(fc, fr), new Pos(tc, tr), captured));
-        // 取消所有已选中状态，便于 UI 更新
+        // 判断是否将军（走子方将对方军）
+        Piece.Color enemy =
+                (currentTurn == Piece.Color.RED)
+                        ? Piece.Color.BLACK
+                        : Piece.Color.RED;
+
+        if (isInCheck(enemy)) {
+            checkedColor = enemy;
+        } else {
+            checkedColor = null;
+        }
+
+// 取消所有已选中状态，便于 UI 更新
         clearpicked();
-        // 切换回合
-        currentTurn = (currentTurn == Piece.Color.RED) ? Piece.Color.BLACK : Piece.Color.RED;
+
+// 切换回合
+        currentTurn = enemy;
+
         return true;
+
     }
 
     public boolean move(Pos from, Pos to) {
@@ -191,7 +206,11 @@ public class Board {
         }
         return null;
     }
-
+    // 记录当前是否有一方被将军
+    private Piece.Color checkedColor = null;
+    public Piece.Color getCheckedColor() {
+        return checkedColor;
+    }
     /**
      * 克隆棋盘（只深拷贝棋子和棋盘布局，不拷贝历史）
      */
@@ -248,6 +267,7 @@ public class Board {
     public boolean isincheck(Piece.Color color) {
         return isInCheck(color);
     }
+    // 强制移动，不进行合法性判断
 
     public boolean undo() {
         if (moveHistory.isEmpty()) return false;
