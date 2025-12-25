@@ -14,6 +14,9 @@ public class NetworkMessage {
         DRAW_ACCEPTED,  // 求和被接受
         DRAW_REJECTED,  // 求和被拒绝
         SURRENDER,      // 认输
+        RESTART_REQUEST,    // 再来一局请求
+        RESTART_ACCEPTED,   // 再来一局被接受
+        RESTART_REJECTED,   // 再来一局被拒绝
         CHAT,           // 聊天消息
         CONNECT,        // 连接
         DISCONNECT,     // 断开连接

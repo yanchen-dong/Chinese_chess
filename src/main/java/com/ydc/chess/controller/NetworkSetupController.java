@@ -126,7 +126,7 @@ public class NetworkSetupController {
         joinGameButton.setDisable(true);
         statusLabel.setText("正在连接到 " + selectedHostIP + "...");
         
-        // ⭐ 关键修复：在连接之前就添加监听器，避免错过 onConnectionEstablished 回调
+        // 在连接之前就添加监听器，避免错过 onConnectionEstablished 回调
         NetworkService.NetworkMessageListener listener = new NetworkService.NetworkMessageListener() {
             @Override
             public void onMessageReceived(com.ydc.chess.network.NetworkMessage message) {
@@ -225,7 +225,7 @@ public class NetworkSetupController {
 
         String finalIp = ip;
         
-        // ⭐ 关键修复：在连接之前就添加监听器，避免错过 onConnectionEstablished 回调
+        // 在连接之前就添加监听器，避免错过 onConnectionEstablished 回调
         NetworkService.NetworkMessageListener listener = new NetworkService.NetworkMessageListener() {
             @Override
             public void onMessageReceived(com.ydc.chess.network.NetworkMessage message) {
