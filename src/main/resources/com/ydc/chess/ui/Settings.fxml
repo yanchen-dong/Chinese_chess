@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="600.0" prefWidth="700.0"
+            style="-fx-background-color: #F0F0F0;"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.ydc.chess.controller.SettingsController">
+
+    <top>
+        <Label text="游戏设置" BorderPane.alignment="CENTER">
+            <font>
+                <Font size="28.0" />
+            </font>
+            <padding>
+                <Insets top="20.0" bottom="20.0"/>
+            </padding>
+        </Label>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true">
+            <VBox spacing="25.0" alignment="TOP_CENTER" style="-fx-background-color: white; -fx-background-radius: 10;">
+                <padding>
+                    <Insets top="30" right="40" bottom="30" left="40"/>
+                </padding>
+
+                <!-- 音效设置 -->
+                <HBox spacing="20.0" alignment="CENTER_LEFT" prefWidth="600">
+                    <Label text="音效:" style="-fx-font-size: 16px;" prefWidth="150"/>
+                    <CheckBox fx:id="soundCheckBox" text="启用音效" style="-fx-font-size: 14px;"/>
+                </HBox>
+
+                <!-- 动画设置 -->
+                <HBox spacing="20.0" alignment="CENTER_LEFT" prefWidth="600">
+                    <Label text="动画效果:" style="-fx-font-size: 16px;" prefWidth="150"/>
+                    <CheckBox fx:id="animationCheckBox" text="启用动画效果" style="-fx-font-size: 14px;"/>
+                </HBox>
+
+                <!-- 悔棋次数设置 -->
+                <HBox spacing="20.0" alignment="CENTER_LEFT" prefWidth="600">
+                    <Label text="悔棋次数:" style="-fx-font-size: 16px;" prefWidth="150"/>
+                    <Spinner fx:id="regretSpinner" prefWidth="100" editable="true"/>
+                    <Label text="次" style="-fx-font-size: 14px;"/>
+                </HBox>
+
+                <!-- 计时器设置 -->
+                <HBox spacing="20.0" alignment="CENTER_LEFT" prefWidth="600">
+                    <Label text="计时器时长:" style="-fx-font-size: 16px;" prefWidth="150"/>
+                    <Spinner fx:id="timerSpinner" prefWidth="100" editable="true"/>
+                    <Label text="分钟" style="-fx-font-size: 14px;"/>
+                </HBox>
+
+                <!-- 玩家名称 -->
+                <HBox spacing="20.0" alignment="CENTER_LEFT" prefWidth="600">
+                    <Label text="玩家名称:" style="-fx-font-size: 16px;" prefWidth="150"/>
+                    <TextField fx:id="playerNameField" prefWidth="200" promptText="请输入玩家名称"/>
+                </HBox>
+
+                <!-- 主题选择 -->
+                <HBox spacing="20.0" alignment="CENTER_LEFT" prefWidth="600">
+                    <Label text="界面主题:" style="-fx-font-size: 16px;" prefWidth="150"/>
+                    <ComboBox fx:id="themeComboBox" prefWidth="200"/>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+
+    <bottom>
+        <HBox spacing="20.0" alignment="CENTER" style="-fx-background-color: white;">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Button fx:id="saveButton" text="保存" onAction="#onSaveClicked"
+                    style="-fx-font-size: 16px; -fx-background-color: #4CAF50; -fx-text-fill: white; -fx-pref-width: 120; -fx-pref-height: 40;"/>
+            <Button fx:id="cancelButton" text="取消" onAction="#onCancelClicked"
+                    style="-fx-font-size: 16px; -fx-background-color: #9E9E9E; -fx-text-fill: white; -fx-pref-width: 120; -fx-pref-height: 40;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>
+

@@ -1,0 +1,365 @@
+[
+  {
+    "id": "1766689985707",
+    "date": "2025-12-26 03:13:05",
+    "gameType": "NETWORK",
+    "winner": "已保存",
+    "moves": [
+      {
+        "fromRow": 7,
+        "fromCol": 1,
+        "toRow": 0,
+        "toCol": 1,
+        "pieceName": "炮",
+        "pieceColor": "RED",
+        "capturedPieceName": "马"
+      },
+      {
+        "fromRow": 2,
+        "fromCol": 7,
+        "toRow": 9,
+        "toCol": 7,
+        "pieceName": "炮",
+        "pieceColor": "BLACK",
+        "capturedPieceName": "傌"
+      },
+      {
+        "fromRow": 0,
+        "fromCol": 1,
+        "toRow": 0,
+        "toCol": 3,
+        "pieceName": "炮",
+        "pieceColor": "RED",
+        "capturedPieceName": "士"
+      },
+      {
+        "fromRow": 9,
+        "fromCol": 7,
+        "toRow": 9,
+        "toCol": 5,
+        "pieceName": "炮",
+        "pieceColor": "BLACK",
+        "capturedPieceName": "仕"
+      },
+      {
+        "fromRow": 0,
+        "fromCol": 3,
+        "toRow": 0,
+        "toCol": 5,
+        "pieceName": "炮",
+        "pieceColor": "RED",
+        "capturedPieceName": "士"
+      },
+      {
+        "fromRow": 9,
+        "fromCol": 5,
+        "toRow": 9,
+        "toCol": 3,
+        "pieceName": "炮",
+        "pieceColor": "BLACK",
+        "capturedPieceName": "仕"
+      },
+      {
+        "fromRow": 0,
+        "fromCol": 5,
+        "toRow": 0,
+        "toCol": 7,
+        "pieceName": "炮",
+        "pieceColor": "RED",
+        "capturedPieceName": "马"
+      },
+      {
+        "fromRow": 0,
+        "fromCol": 6,
+        "toRow": 2,
+        "toCol": 4,
+        "pieceName": "象",
+        "pieceColor": "BLACK"
+      },
+      {
+        "fromRow": 0,
+        "fromCol": 7,
+        "toRow": 0,
+        "toCol": 2,
+        "pieceName": "炮",
+        "pieceColor": "RED",
+        "capturedPieceName": "象"
+      },
+      {
+        "fromRow": 9,
+        "fromCol": 3,
+        "toRow": 9,
+        "toCol": 1,
+        "pieceName": "炮",
+        "pieceColor": "BLACK",
+        "capturedPieceName": "傌"
+      },
+      {
+        "fromRow": 9,
+        "fromCol": 2,
+        "toRow": 7,
+        "toCol": 4,
+        "pieceName": "相",
+        "pieceColor": "RED"
+      },
+      {
+        "fromRow": 9,
+        "fromCol": 1,
+        "toRow": 9,
+        "toCol": 6,
+        "pieceName": "炮",
+        "pieceColor": "BLACK",
+        "capturedPieceName": "相"
+      }
+    ],
+    "redPlayerName": "玩家",
+    "blackPlayerName": "网络玩家",
+    "totalMoves": 12
+  },
+  {
+    "id": "1766689207490",
+    "date": "2025-12-26 03:00:07",
+    "gameType": "NETWORK",
+    "winner": "已保存",
+    "moves": [
+      {
+        "fromRow": 7,
+        "fromCol": 7,
+        "toRow": 0,
+        "toCol": 7,
+        "pieceName": "炮",
+        "pieceColor": "RED",
+        "capturedPieceName": "马"
+      },
+      {
+        "fromRow": 2,
+        "fromCol": 7,
+        "toRow": 8,
+        "toCol": 7,
+        "pieceName": "炮",
+        "pieceColor": "BLACK"
+      },
+      {
+        "fromRow": 0,
+        "fromCol": 7,
+        "toRow": 0,
+        "toCol": 5,
+        "pieceName": "炮",
+        "pieceColor": "RED",
+        "capturedPieceName": "士"
+      },
+      {
+        "fromRow": 8,
+        "fromCol": 7,
+        "toRow": 8,
+        "toCol": 5,
+        "pieceName": "炮",
+        "pieceColor": "BLACK"
+      },
+      {
+        "fromRow": 0,
+        "fromCol": 5,
+        "toRow": 0,
+        "toCol": 3,
+        "pieceName": "炮",
+        "pieceColor": "RED",
+        "capturedPieceName": "士"
+      },
+      {
+        "fromRow": 8,
+        "fromCol": 5,
+        "toRow": 8,
+        "toCol": 3,
+        "pieceName": "炮",
+        "pieceColor": "BLACK"
+      },
+      {
+        "fromRow": 0,
+        "fromCol": 3,
+        "toRow": 0,
+        "toCol": 1,
+        "pieceName": "炮",
+        "pieceColor": "RED",
+        "capturedPieceName": "马"
+      },
+      {
+        "fromRow": 8,
+        "fromCol": 3,
+        "toRow": 0,
+        "toCol": 3,
+        "pieceName": "炮",
+        "pieceColor": "BLACK"
+      },
+      {
+        "fromRow": 0,
+        "fromCol": 1,
+        "toRow": 0,
+        "toCol": 3,
+        "pieceName": "炮",
+        "pieceColor": "RED",
+        "capturedPieceName": "炮"
+      },
+      {
+        "fromRow": 0,
+        "fromCol": 4,
+        "toRow": 0,
+        "toCol": 3,
+        "pieceName": "将",
+        "pieceColor": "BLACK",
+        "capturedPieceName": "炮"
+      },
+      {
+        "fromRow": 7,
+        "fromCol": 1,
+        "toRow": 3,
+        "toCol": 1,
+        "pieceName": "炮",
+        "pieceColor": "RED"
+      },
+      {
+        "fromRow": 0,
+        "fromCol": 3,
+        "toRow": 1,
+        "toCol": 3,
+        "pieceName": "将",
+        "pieceColor": "BLACK"
+      },
+      {
+        "fromRow": 3,
+        "fromCol": 1,
+        "toRow": 3,
+        "toCol": 4,
+        "pieceName": "炮",
+        "pieceColor": "RED",
+        "capturedPieceName": "卒"
+      }
+    ],
+    "redPlayerName": "玩家",
+    "blackPlayerName": "网络玩家",
+    "totalMoves": 13
+  },
+  {
+    "id": "1766689106124",
+    "date": "2025-12-26 02:58:26",
+    "gameType": "LOCAL",
+    "winner": "已保存",
+    "moves": [
+      {
+        "fromRow": 7,
+        "fromCol": 7,
+        "toRow": 0,
+        "toCol": 7,
+        "pieceName": "炮",
+        "pieceColor": "RED",
+        "capturedPieceName": "马"
+      },
+      {
+        "fromRow": 2,
+        "fromCol": 7,
+        "toRow": 2,
+        "toCol": 2,
+        "pieceName": "炮",
+        "pieceColor": "BLACK"
+      }
+    ],
+    "redPlayerName": "玩家",
+    "blackPlayerName": "对手",
+    "totalMoves": 2
+  },
+  {
+    "id": "1766688317506",
+    "date": "2025-12-26 02:45:17",
+    "gameType": "LOCAL",
+    "winner": "已保存",
+    "moves": [
+      {
+        "fromRow": 7,
+        "fromCol": 7,
+        "toRow": 0,
+        "toCol": 7,
+        "pieceName": "炮",
+        "pieceColor": "RED",
+        "capturedPieceName": "马"
+      },
+      {
+        "fromRow": 2,
+        "fromCol": 7,
+        "toRow": 8,
+        "toCol": 7,
+        "pieceName": "炮",
+        "pieceColor": "BLACK"
+      },
+      {
+        "fromRow": 0,
+        "fromCol": 7,
+        "toRow": 0,
+        "toCol": 5,
+        "pieceName": "炮",
+        "pieceColor": "RED",
+        "capturedPieceName": "士"
+      },
+      {
+        "fromRow": 8,
+        "fromCol": 7,
+        "toRow": 8,
+        "toCol": 5,
+        "pieceName": "炮",
+        "pieceColor": "BLACK"
+      },
+      {
+        "fromRow": 0,
+        "fromCol": 5,
+        "toRow": 0,
+        "toCol": 3,
+        "pieceName": "炮",
+        "pieceColor": "RED",
+        "capturedPieceName": "士"
+      },
+      {
+        "fromRow": 8,
+        "fromCol": 5,
+        "toRow": 8,
+        "toCol": 3,
+        "pieceName": "炮",
+        "pieceColor": "BLACK"
+      },
+      {
+        "fromRow": 0,
+        "fromCol": 3,
+        "toRow": 0,
+        "toCol": 1,
+        "pieceName": "炮",
+        "pieceColor": "RED",
+        "capturedPieceName": "马"
+      },
+      {
+        "fromRow": 0,
+        "fromCol": 2,
+        "toRow": 2,
+        "toCol": 4,
+        "pieceName": "象",
+        "pieceColor": "BLACK"
+      },
+      {
+        "fromRow": 0,
+        "fromCol": 1,
+        "toRow": 0,
+        "toCol": 3,
+        "pieceName": "炮",
+        "pieceColor": "RED"
+      },
+      {
+        "fromRow": 0,
+        "fromCol": 4,
+        "toRow": 0,
+        "toCol": 3,
+        "pieceName": "将",
+        "pieceColor": "BLACK",
+        "capturedPieceName": "炮"
+      }
+    ],
+    "redPlayerName": "玩家",
+    "blackPlayerName": "对手",
+    "totalMoves": 10
+  }
+]

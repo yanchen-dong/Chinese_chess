@@ -35,12 +35,9 @@ public class CheckMate {
                     System.out.println("尝试移动 " + piece.getName() + " 从 " + fromPos + " 到 " + toPos);
                     Piece capturedPiece = board.getPiece(toPos);
                     if (board.move(fromPos, toPos)) {
-                        // 撤销模拟移动
+                        // 撤销模拟移动（undo会自动恢复被吃的棋子）
                         System.out.println("移动后检查将军状态...");
                         board.undo();
-                        if (capturedPiece != null) {
-                            board.setPiece(toPos, capturedPiece);
-                        }
                         return true;
                     }
                 }

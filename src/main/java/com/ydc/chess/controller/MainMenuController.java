@@ -33,11 +33,11 @@ public class MainMenuController {
 
     @FXML
     public void onSettingsClicked() {
-        System.out.println("功能: 打开设置界面 (暂未实现)");
+        UIManager.goTo("Settings.fxml", "设置");
     }
 
     @FXML
     public void onRecordsClicked() {
-        System.out.println("功能: 查看对局记录 (暂未实现)");
+        UIManager.goTo("Records.fxml", "对局记录");
     }
 }

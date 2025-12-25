@@ -13,7 +13,8 @@ public class Board {
     public enum checkStatus {
         NONE,
         BEFORE_CHECK,
-        AFTER_CHECK
+        AFTER_CHECK,
+        FACE_TO_FACE  // 将帅面对面
     }//被将军的状态
     private checkStatus checkstatus;
     // grid[10][9]: grid[row][col]
@@ -161,6 +162,15 @@ public class Board {
               checkstatus = checkStatus.AFTER_CHECK;
             return false;
         }
+        
+        // 检查将帅面对面（移动后是否会导致将帅面对面）
+        if (isGeneralsFaceToFace()) {
+            // 恢复
+            grid[fr][fc] = from;
+            grid[tr][tc] = captured;
+            checkstatus = checkStatus.FACE_TO_FACE;
+            return false;
+        }
 
         // 更新棋子对象位置（Pos: x=列, y=行）
         from.setPosition(new Pos(tc, tr));//添加setPosition方法
@@ -267,6 +277,43 @@ public class Board {
     public boolean isincheck(Piece.Color color) {
         return isInCheck(color);
     }
+    
+    /**
+     * 检查将帅是否面对面（在同一列且中间没有棋子）
+     */
+    private boolean isGeneralsFaceToFace() {
+        Pos redGeneralPos = findGeneralPos(Piece.Color.RED);
+        Pos blackGeneralPos = findGeneralPos(Piece.Color.BLACK);
+        
+        if (redGeneralPos == null || blackGeneralPos == null) {
+            return false;
+        }
+        
+        int redRow = redGeneralPos.getY();
+        int redCol = redGeneralPos.getX();
+        int blackRow = blackGeneralPos.getY();
+        int blackCol = blackGeneralPos.getX();
+        
+        // 检查是否在同一列
+        if (redCol != blackCol) {
+            return false;
+        }
+        
+        // 检查两个将之间是否有棋子阻挡
+        int minRow = Math.min(redRow, blackRow);
+        int maxRow = Math.max(redRow, blackRow);
+        
+        for (int r = minRow + 1; r < maxRow; r++) {
+            if (grid[r][redCol] != null) {
+                // 中间有棋子阻挡，不是面对面
+                return false;
+            }
+        }
+        
+        // 两个将在同一列且中间没有棋子，面对面
+        return true;
+    }
+    
     // 强制移动，不进行合法性判断
 
     public boolean undo() {

@@ -38,7 +38,20 @@ public class UIManager {
             Parent root = loader.load();
             // 3. 创建新场景或替换根节点
             // 这里我们直接替换 Scene 的根节点，或者创建一个新 Scene
-            Scene scene = new Scene(root, 850, 675); // 默认大小，可调整
+            // 根据不同的界面设置不同的大小
+            int width = 850;
+            int height = 675;
+            if (fxmlName.equals("ReplayBoard.fxml")) {
+                width = 1100;
+                height = 750;
+            } else if (fxmlName.equals("GameBoard.fxml")) {
+                width = 1000;
+                height = 700;
+            } else if (fxmlName.equals("Records.fxml")) {
+                width = 1000;
+                height = 700;
+            }
+            Scene scene = new Scene(root, width, height);
 
             // 4. 设置到主窗口
             primaryStage.setScene(scene);
@@ -46,9 +59,13 @@ public class UIManager {
             primaryStage.setResizable(false);
             primaryStage.show();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             System.err.println("界面跳转失败：" + e.getMessage());
+            if (e.getCause() != null) {
+                System.err.println("原因：" + e.getCause().getMessage());
+                e.getCause().printStackTrace();
+            }
         }
     }
 }

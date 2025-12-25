@@ -79,23 +79,9 @@ public class DialogUtils {
                 .getButtonTypes()
                 .addAll(replayBtn, saveBtn, backBtn);
 
-        // ====== 拦截“存储棋局记录”按钮 ======
-        Node saveButton = dialog.getDialogPane().lookupButton(saveBtn);
-        saveButton.addEventFilter(ActionEvent.ACTION, event -> {
-
-            // 1️⃣ 执行保存逻辑（此处先占位）
-            // TODO: 调用真实的棋局保存服务
-            System.out.println("棋局记录已保存");
-
-            // 2️⃣ 更新对话框内容（核心）
-            dialog.setContentText("棋局记录已成功保存！\n\n您可以选择继续游戏或返回主菜单。");
-
-            // 3️⃣ 阻止对话框关闭
-            event.consume();
-        });
-
         dialog.setResultConverter(button -> {
             if (button == replayBtn) return 0;
+            if (button == saveBtn) return 1;  // 存储棋局记录返回 1
             if (button == backBtn) return 2;
             return -1;
         });
